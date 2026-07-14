@@ -32,3 +32,35 @@
 .nav-links a:hover {
     color: var(--primary);
 }
+
+@media (max-width:768px){
+
+    .navbar{
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        align-items:center;
+
+        gap:1rem;
+
+        padding:5rem;
+
+    }
+
+    .nav-links{
+
+        width:100%;
+
+        display:flex;
+
+        justify-content:center;
+
+        gap:1.5rem;
+
+        flex-wrap:wrap;
+
+    }
+
+}
