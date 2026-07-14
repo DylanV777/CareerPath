@@ -274,3 +274,90 @@
     line-height:1.7;
 
 }
+
+.cta{
+
+    padding:6rem 2rem;
+
+    text-align:center;
+
+}
+
+.cta-content{
+
+    max-width:800px;
+
+    margin:auto;
+
+}
+
+.cta h2{
+
+    font-size:2.5rem;
+
+    margin-bottom:1.5rem;
+
+}
+
+.cta p{
+
+    font-size:1.1rem;
+
+    color:var(--gray);
+
+    line-height:1.8;
+
+    margin-bottom:2.5rem;
+
+}
+
+.cta-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:1rem;
+
+    flex-wrap:wrap;
+
+}
+
+
+@media (max-width: 768px){
+
+    .hero{
+
+        grid-template-columns:1fr;
+
+        text-align:center;
+
+    }
+
+    .hero-buttons{
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+    }
+
+    .features-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .steps-container{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .hero h1{
+
+        font-size:2.2rem;
+
+    }
+
+}

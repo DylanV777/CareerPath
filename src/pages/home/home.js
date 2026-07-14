@@ -33,7 +33,7 @@ export function Home() {
                 <div class="hero-image">
 
                     <img
-                        src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900"
+                        src="https://imagenes2.eltiempo.com/files/image_1200_535/files/fp/uploads/2026/04/21/69e7dbc5c67d8.r_d.84-240.png"
                         alt="Estudiantes universitarios"
                     >
 
@@ -132,6 +132,33 @@ export function Home() {
                         </p>
 
                     </article>
+
+                </div>
+
+            </section>
+            
+            <section class="cta">
+
+                <div class="cta-content">
+
+                    <h2>Start discovering your professional future today.</h2>  
+
+                    <p>
+                        Thousands of students are unsure about which career path to choose.
+                        Take the first step and discover the options that best suit you.
+                    </p>
+
+                    <div class="cta-buttons">
+
+                        <button id="ctaRegister" class="btn-primary">
+                            Create an Account
+                        </button>
+
+                        <button id="ctaTest" class="btn-secondary">
+                            Learn More About the Test
+                        </button>
+
+                    </div>
 
                 </div>
 
