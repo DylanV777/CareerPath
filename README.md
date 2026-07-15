@@ -16,53 +16,56 @@ La base de datos **CareerPathDB** fue creada para almacenar y gestionar toda la 
 
 ##  Herramientas 
 
-* **Motor de base de datos:** Se emplea MySQL Server 8.0 (con funciones avanzadas de optimización e indexación).
-* **Modelado y administración:** MySQL Workbench (realización de consultas SQL y diseño EER).
-* **Desarrollo:** Visual Studio Code (redacción de scripts para la migración e inicialización).
+* **Motor de base de datos**: El motor que se emplea es PostgreSQL 9.16 (con funciones avanzadas de optimización, indexación y alta conformidad con el estándar SQL).
+* **Modelado y administración**: pgAdmin 4 y pgModeler (realización de consultas SQL y diseño de diagramas de entidad-relación para PostgreSQL).
+* **Desarrollo:** Visual Studio Code (redacción de scripts para la migración e inicialización en el backend).
 * **Control de versiones**: Git y GitHub (monitoreo de las modificaciones en los scripts .sql).
 
 ---
 
-##  Modelo Relacional (De la siguiente manera estara estructurada la base de datos)
+## Modelo Relacional (De la siguiente manera estará estructurada la base de datos) ( Modelos de tablas creadas con ayuda de IA para mejoria visual de la informacion )
 
 ### Usuario (Usuario)
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_usuario` | INT | AUTO_INCREMENT | Es el ID individual de los usuario. |
+| `id_usuario` | SERIAL | PRIMARY KEY | Es el ID individual de los usuarios (autoincremental). |
 | `nombre` | VARCHAR(100) | NOT NULL | Nombre(s) del usuario. |
 | `apellido` | VARCHAR(100) | NOT NULL | Apellido(s) del usuario. |
-| `correo` | VARCHAR(150) | NOT NULL, ÚNICO | Correo electrónico para el inicio de sesión. |
-| `contraseña` | VARCHAR(255) | NOT NULL | Manejo de  contraseñas. |
-| `rol` | ENUM('USER', 'ADMIN') | NOT NULL | Rol utilizado para el control de accesos de los usuarios . |
-| `fecha_registro` | DATETIME | DEFAULT CURRENT_TIMESTAMP | Crea una fecha automática al momento en que se creó la cuenta. |
+| `correo` | VARCHAR(150) | NOT NULL, UNIQUE | Correo electrónico para el inicio de sesión. |
+| `contrasena` | VARCHAR(255) | NOT NULL | Manejo de contraseñas. |
+| `rol` | tipo_rol | NOT NULL | Rol utilizado para el control de accesos (definido como tipo ENUM personalizado). |
+| `fecha_registro` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Crea una fecha y hora automática al momento en que se creó la cuenta. |
+
 
 ### Carrera (`Carreras`)
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_carrera` | INT | AUTO_INCREMENT | Es el identificador de la carrera. |
+| `id_carrera` | SERIAL | PRIMARY KEY | Es el identificador de la carrera (autoincremental). |
 | `nombre` | VARCHAR(150) | NOT NULL | Título oficial de la profesión. |
-| `descripcion` | TEXT |  | Descripción general del perfil profesional . |
-| `duracion` | VARCHAR(50) | NOT NULL | Periodo de tiempo previsto (por ejemplo: "10 semestres", "5 años", lo que el usuario ingrese ). |
-| `modalidad` | VARCHAR(50) | NOT NULL | Modalidad de estudio (virtual, presencial o híbrida).|
-| `habilidades_requeridas` | TEXTO | NOT NULL | Capacidades que se requieren para la carrera. |
-| `areas_trabajo` | TEXTO | NOT NULL | Campos o sectores de trabajo. |
+| `descripcion` | TEXT |  | Descripción general del perfil profesional. |
+| `duracion` | VARCHAR(50) | NOT NULL | Periodo de tiempo previsto (por ejemplo: "10 semestres", "5 años", lo que el usuario ingrese). |
+| `modalidad` | VARCHAR(50) | NOT NULL | Modalidad de estudio (virtual, presencial o híbrida). |
+| `habilidades_requeridas` | TEXT | NOT NULL | Capacidades que se requieren para la carrera. |
+| `areas_trabajo` | TEXT | NOT NULL | Campos o sectores de trabajo. |
 | `salario_promedio` | DECIMAL(10,2) | NOT NULL | Ingreso calculado en el mercado local. |
+
 
 ###  Perfil vocacional (`Perfiles`)
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_perfil`  | INT | AUTO_INCREMENT | Es el identifiacor que identifica la clase de perfil. |
-| `nombre` | VARCHAR(100) | NO NULO | Tipo de vocación (por ejemplo, artístico o tecnológico).|
+| `id_perfil` | SERIAL | PRIMARY KEY | Es el identificador de la clase de perfil (autoincremental). |
+| `nombre` | VARCHAR(100) | NOT NULL | Tipo de vocación (por ejemplo, artístico o tecnológico). |
 | `descripcion` | TEXT | NOT NULL | Características distintivas de este tipo de perfil. |
+
 
 ###  Pregunta (Preguntas)
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_pregunta`  | INT | AUTO_INCREMENT | Código que identifica la pregunta. |
+| `id_pregunta` | SERIAL | PRIMARY KEY | Código que identifica la pregunta (autoincremental). |
 | `pregunta` | TEXT | NOT NULL | Redacción evaluativa del examen. |
 
 ### Opción de respuesta (Opciones)
@@ -78,21 +81,22 @@ La base de datos **CareerPathDB** fue creada para almacenar y gestionar toda la 
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_resultado` | INT | AUTO_INCREMENT | El identificador de la entrada del resultado. |
-| `id_usuario` | INT | NOT NULL (FK) | El usuario que realizó la prueba. |
-| `id_perfil` | INT | NO NULO (FK) | Perfil dominante que se ha adquirido. |
-| `porcentaje_afinidad`| DECIMAL(5,2) | NOT NULL | Mide el grado de coincidencia con el perfil (0-100%). |
-| `explicacion` | TEXTO | NOT NULL | Retroalimentación particularizada del resultado. |
-| `fecha` | DATETIME | DEFAULT CURRENT_TIMESTAMP | Fecha en la que se llevó a cabo el examen (AUTOMATICA). |
+| `id_resultado` | SERIAL | PRIMARY KEY | El identificador de la entrada del resultado (autoincremental). |
+| `id_usuario` | INT | NOT NULL, FOREIGN KEY | El usuario que realizó la prueba (Llave foránea). |
+| `id_perfil` | INT | NOT NULL, FOREIGN KEY | Perfil dominante que se ha adquirido (Llave foránea). |
+| `porcentaje_afinidad` | DECIMAL(5,2) | NOT NULL | Mide el grado de coincidencia con el perfil (0-100%). |
+| `explicacion` | TEXT | NOT NULL | Retroalimentación particularizada del resultado. |
+| `fecha` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Fecha y hora en la que se llevó a cabo el examen (automática). |
+
 
 ### Respuesta almacenada (`Respuesta de los Usuario`)
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_respuesta` | INT | AUTO_INCREMENT | Clave única que identifica el registro de respuesta. |
-| `id_resultado` | INT | NOT NULL (FK) | El test al que la respuesta corresponde. |
-| `id_pregunta` | INT | NOT NULL (FK) | Pregunta que ha sido contestada. |
-| `id_opcion` | INT | NOT NULL (FK) | Opción que seleccionó el usuario. |
+| `id_respuesta` | SERIAL | PRIMARY KEY | Clave única que identifica el registro de respuesta (autoincremental). |
+| `id_resultado` | INT | NOT NULL, FOREIGN KEY | El test al que la respuesta corresponde (Llave foránea). |
+| `id_pregunta` | INT | NOT NULL, FOREIGN KEY | Pregunta que ha sido contestada (Llave foránea). |
+| `id_opcion` | INT | NOT NULL, FOREIGN KEY | Opción que seleccionó el usuario (Llave foránea). |
 
 ### Sugerencia (`Recomendacion`)
 
@@ -107,9 +111,9 @@ La base de datos **CareerPathDB** fue creada para almacenar y gestionar toda la 
 
 | Campo | Tipo de datos | Características | Detalles |
 | :--- | :--- | :--- | :--- |
-| `id_favorito`  | INT | AUTO_INCREMENT | Es el código que identifica al marcador favorito. |
-| `id_usuario`  | INT | NOT NULL (FK) | El usuario que almacena la carrera. |
-| `id_carrera`  | INT | NOT NULL (FK) | Carrera que se guarda como favorita. |
+| `id_favorito` | SERIAL | PRIMARY KEY | Es el código que identifica al marcador favorito (autoincremental). |
+| `id_usuario` | INT | NOT NULL, FOREIGN KEY | El usuario que almacena la carrera (Llave foránea). |
+| `id_carrera` | INT | NOT NULL, FOREIGN KEY | Carrera que se guarda como favorita (Llave foránea). |
 
 ---
 
@@ -132,7 +136,7 @@ erDiagram
 ```
 
 ### Resumen de Mapeo de Restricciones
-* **`PRIMARY KEY`**: Aplicado en todos los campos `id_*` de manera numérica indexada de tipo entero.
+* **`PRIMARY KEY`**: Aplicado en todos los campos con variable `id_*` de manera numérica indexada de tipo entero.
 * **`NOT NULL`**: Forzado en campos operacionales para evitar anomalías o vacíos en reportes de afinidad.
 * **`UNIQUE`**: Restricción explícita en `Usuario.correo` para mitigar cuentas duplicadas.
 
@@ -152,7 +156,7 @@ El diseño lógico de la base de datos se ha creado siguiendo los preceptos de l
 1. **Pruebas históricas:** Un usuario tiene la posibilidad de realizar el test en varias ocasiones para analizar cómo han cambiado sus intereses.
 2. **Resultados atómicos:** Cada vez que se realiza un test, se crea un registro cerrado y único de los resultados.
 3. **Recomendación múltiple:** Un solo resultado es capaz de procesar y proponer una lista dinámica de múltiples carreras profesionales al mismo tiempo.
-4. **Relación de favoritos N:M:** Un usuario puede marcar varias carreras como sus favoritas, mientras que una sola carrera puede estar en las listas de favoritos de miles de usuarios. (Esto se soluciona por medio de la tabla intermedia llamada `Favorito`.)
+4. **Relación de favoritos N:** Un usuario puede marcar varias carreras como sus favoritas, mientras que una sola carrera puede estar en las listas de favoritos de miles de usuarios. (Esto se soluciona por medio de la tabla intermedia llamada `Favorito`.)
 5. **Consistencia de las respuestas:** Las alternativas del test están estrictamente vinculadas a su pregunta matriz, lo que garantiza que el usuario solo conserve opciones válidas en el flujo.
 6. **Seguridad de los accesos (RBAC):** Los usuarios que tienen el valor "ADMIN" en la columna "rol" son los únicos que cuentan con privilegios para actualizar, borrar o insertar datos en el catálogo de "Carrera" y "Pregunta".
 
@@ -167,4 +171,4 @@ El diseño lógico de la base de datos se ha creado siguiendo los preceptos de l
 ##  Información del Proyecto
 * **Versión del Esquema:** v1.0
 * **Entorno:** Producción / Desarrollo - Proyecto Integrador *CareerPath*
-* **Tipo:** Base de Datos Relacional (RDBMS) - MySQL 8.0
+* **Tipo:** Base de Datos Relacional - PgAdmin 9.16
