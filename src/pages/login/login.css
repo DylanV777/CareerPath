@@ -1,0 +1,121 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.15), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.12), transparent 28%),
+        #f8fafc;
+}
+
+.login-card {
+    width: min(100%, 420px);
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 2.25rem 2rem;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.login-card h1 {
+    margin-bottom: 0.5rem;
+    font-size: 2.05rem;
+    color: #111827;
+}
+
+.login-card p {
+    margin-bottom: 1.75rem;
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #334155;
+    font-weight: 600;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem 1rem;
+    border-radius: 16px;
+    border: 1px solid #d1d5db;
+    background: #f8fafc;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    background: #ffffff;
+}
+
+.btn-login,
+.btn-primary {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: none;
+    border-radius: 16px;
+    background: #6366f1;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 14px 36px rgba(99, 102, 241, 0.18);
+}
+
+.btn-login:hover,
+.btn-primary:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 1.2rem;
+    border-radius: 16px;
+    border: 1px solid #c7d2fe;
+    background: #eef2ff;
+    color: #3730a3;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #e0e7ff;
+}
+
+.error-message {
+    margin-top: 0.75rem;
+    min-height: 1.2rem;
+    color: #dc2626;
+    font-size: 0.95rem;
+}
+
+.register-link {
+    margin-top: 1.75rem;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.register-link a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}

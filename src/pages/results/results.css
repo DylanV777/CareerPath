@@ -1,0 +1,78 @@
+.results-container {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1rem;
+}
+
+.results-card {
+    width: 100%;
+    max-width: 720px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.explanation {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.careers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.career-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 1.25rem;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.career-card h3 {
+    margin-bottom: 0.75rem;
+    color: #111827;
+}
+
+.career-actions {
+    margin-top: 1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    border: none;
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #f8fafc;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.affinity {
+    color: #4f46e5;
+    font-weight: 600;
+    margin: 0.5rem 0 1rem;
+}

@@ -1,0 +1,121 @@
+.test-container {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1rem;
+}
+
+.test-card {
+    width: 100%;
+    max-width: 640px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #4f46e5;
+    transition: width 0.2s ease;
+}
+
+.progress-label {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.question-text {
+    margin-bottom: 1.25rem;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.option-item:hover {
+    border-color: #4f46e5;
+}
+
+.test-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    border: none;
+    border-radius: 16px;
+    padding: 0.95rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: #ffffff;
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.18);
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #f8fafc;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    background: #ffffff;
+}
+
+.option-item:hover {
+    border-color: #6366f1;
+    background: #f8f8ff;
+}
+
+.option-item input:checked + span {
+    font-weight: 700;
+    color: #1f2937;
+}
