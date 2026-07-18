@@ -30,6 +30,7 @@ function renderLoginView(container) {
     try {
       const { access_token } = await apiPost("/auth/login", { email, password });
       localStorage.setItem("access_token", access_token);
+      renderNav();
       renderTestView(container);
     } catch (error) {
       messageEl.textContent = error.message;

@@ -72,6 +72,15 @@ class CareerOut(BaseModel):
     description: str
 
 
+class CareerDetailOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    description: str
+    profile: VocationalProfileOut
+
+
 class TestSubmitOut(BaseModel):
     attempt_id: int
     result_id: int

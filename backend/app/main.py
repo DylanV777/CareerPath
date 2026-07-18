@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import auth, test
+from app.routers import auth, careers, test
 
 app = FastAPI(title="CareerPath API")
 
@@ -14,6 +14,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(test.router)
+app.include_router(careers.router)
 
 
 @app.get("/health")

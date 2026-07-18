@@ -280,3 +280,41 @@ Se actualizó `frontend/js/views/results.js` para recibir también `recommended_
 ### Pendiente de verificación manual en navegador
 
 Se confirmó que la nueva versión de `results.js` se sirve correctamente y que la API responde con perfil + 3 carreras coherentes en cada prueba manual, pero la vista final (tarjetas de carreras con sus estilos) debe confirmarse visualmente abriendo `http://127.0.0.1:5500` en un navegador real.
+
+---
+
+## HU-06 · Consultar catálogo de carreras — **Must**
+
+> *Como usuario, quiero explorar un listado de carreras disponibles para informarme más allá de mi recomendación.*
+
+### Criterios de aceptación y cómo se cumplieron
+
+| Criterio | Cómo se implementó |
+|---|---|
+| Existe un listado accesible con todas las carreras cargadas en el sistema | `GET /careers` (`routers/careers.py`), nuevo router registrado en `main.py`. Devuelve las 20 carreras semilla ordenadas alfabéticamente por nombre. |
+| Cada carrera del listado puede consultarse con su información básica | El listado (`CareerOut`) ya trae nombre y descripción de cada carrera. Además se implementó `GET /careers/{career_id}` (tarea `CAR-02`, Should, incluida en esta misma historia por ser trivial de agregar junto al listado), que devuelve el detalle de una carrera puntual junto con el perfil vocacional al que pertenece (`CareerDetailOut`), y responde `404` si el id no existe. |
+| El listado carga correctamente incluso si el usuario no completó el test | El endpoint no depende en absoluto de `TestAttempt`/`Result`: consulta directamente la tabla `careers`. Se verificó registrando un usuario nuevo que nunca respondió el test y confirmando que `GET /careers` responde `200` igualmente. |
+
+### Decisiones técnicas
+
+- **`GET /careers` y `GET /careers/{id}` requieren autenticación** (`get_current_user`), igual que el resto de endpoints de la aplicación excepto `/auth/register` y `/auth/login`. La historia de usuario dice "Como usuario" sin especificar "visitante" ni "no autenticado" (a diferencia de cómo si se hubiera redactado explícitamente para acceso público), así que se mantuvo la misma postura de seguridad consistente con todo el resto de la API en vez de abrir una excepción puntual sin que el proyecto lo pida.
+- **`CareerDetailOut` incluye el perfil vocacional relacionado**, mientras que el listado (`CareerOut`) no lo trae: así el detalle aporta algo más que el listado (si fueran idénticos, no tendría sentido tener un endpoint de detalle aparte). A diferencia de las preguntas del test (donde se oculta a propósito el perfil para que el usuario no pueda "hackear" sus respuestas), aquí no hay ningún riesgo de manipulación en mostrar la relación carrera–perfil: es información legítimamente útil para explorar el catálogo.
+- **No se agregó ninguna relación (`relationship()`) de SQLAlchemy entre `Career` y `VocationalProfile`**: se mantiene el mismo estilo usado en todo `models.py` (solo columnas `ForeignKey`, sin relaciones ORM), resolviendo la carrera→perfil con una segunda consulta explícita en el endpoint. Es consistente con cómo ya se resolvía en `routers/test.py`.
+- **Sin pruebas automatizadas nuevas para este endpoint**: a diferencia de HU-03/04/05, aquí no hay ninguna lógica de negocio pura que aislar (es una lectura directa de la base de datos con un `if not found → 404`), así que no había nada significativo que probar con un test unitario sin base de datos. Se verificó con pruebas manuales end-to-end, mismo criterio que se usó para `GET /test/questions` y `GET /auth/me` en HU-02/HU-03.
+
+### Pruebas realizadas
+
+**Manuales end-to-end** (backend real + PostgreSQL real, vía curl):
+1. `GET /careers` sin token → `401`.
+2. `GET /careers` con token válido → `200` con las 20 carreras ordenadas alfabéticamente.
+3. `GET /careers/9` → `200` con el detalle de "Psicología" y su perfil relacionado (`SOCIAL`).
+4. `GET /careers/999` (id inexistente) → `404` "Carrera no encontrada".
+5. Registro de un usuario nuevo que nunca respondió el test, y `GET /careers` con su token → `200`, confirmando el tercer criterio de aceptación.
+
+### Frontend
+
+Se agregó `frontend/js/views/careers.js`: pantalla de catálogo que lista las carreras (nombre + descripción) y permite hacer clic en cualquiera para ver su detalle, incluyendo el perfil vocacional al que pertenece, con un botón para volver al listado. Como ahora hay más de una pantalla a la que un usuario autenticado puede querer volver (test vocacional y catálogo), se agregó una barra de navegación persistente (`<nav id="nav">` en `index.html`, controlada por `renderNav()` en `app.js`) que vive fuera del contenedor `#app` y por eso no se borra cuando cada vista reemplaza su contenido. Se muestra solo cuando hay sesión iniciada (se activa justo después del login y al recargar la página si ya hay un `access_token` guardado).
+
+### Pendiente de verificación manual en navegador
+
+Se confirmó que `careers.js` y los nuevos estilos se sirven correctamente y que la API responde como se espera en cada caso probado, pero la experiencia visual completa (navegación entre "Test vocacional" y "Catálogo de carreras", clic en una carrera para ver su detalle, botón de volver) debe confirmarse abriendo `http://127.0.0.1:5500` en un navegador real.

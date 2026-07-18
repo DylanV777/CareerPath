@@ -6,8 +6,9 @@ body {
   font-family: system-ui, sans-serif;
   background: #f4f5f7;
   display: flex;
-  justify-content: center;
-  padding-top: 4rem;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
   margin: 0;
 }
 
@@ -177,4 +178,57 @@ body {
   color: #57606a;
   font-size: 0.9rem;
   line-height: 1.4;
+}
+
+.nav-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.nav-bar button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #2f6feb;
+  border-radius: 4px;
+  background: white;
+  color: #2f6feb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-bar button:hover {
+  background: #eef4ff;
+}
+
+.careers-catalog-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 480px;
+}
+
+.career-item--clickable {
+  cursor: pointer;
+}
+
+.career-item--clickable:hover {
+  border-color: #2f6feb;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #2f6feb;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.career-related-profile {
+  font-weight: 600;
+  color: #24292f;
+  margin: 0 0 1rem;
 }
