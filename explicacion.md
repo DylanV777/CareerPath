@@ -403,15 +403,15 @@ Al probar `POST /admin/questions` por primera vez, la base de datos devolvió `d
 
 ### Frontend
 
-No se construyó una interfaz de administración en esta historia. El alcance del proyecto (ver `Plan_Ruta_CareerPath_Individual.md`) no incluye una pantalla de administración entre sus entregables de Fase 5 más allá del backlog técnico `ADMIN-01`/`ADMIN-02`, que se limita a los endpoints; y sin un usuario admin real en producción/demo, una UI dedicada no tendría quién la probara más allá de lo ya cubierto por las pruebas manuales vía API. Si la sustentación lo requiere, se puede probar el CRUD directamente desde `/docs` (Swagger) autenticándose con un usuario admin.
+No se construyó una interfaz de administración en esta historia; se dejó como CRUD solo de API, probado desde `/docs` (Swagger) autenticándose con un usuario admin. La brecha frontend se cerró después, a solicitud explícita del usuario, en **HU-08b** (ver más abajo).
 
 ---
 
-## HU-10 · Gestionar preguntas y carreras desde la interfaz — **Should**
+## HU-08b · Gestionar preguntas y carreras desde la interfaz — **Should**
 
 > *Como administrador, quiero gestionar preguntas y carreras desde una pantalla propia de la aplicación en vez de usar Swagger o la base de datos directamente, para poder mantener el contenido del test de forma más ágil.*
 
-Historia adicional, agregada después de HU-08 a solicitud explícita del usuario, para cerrar la brecha frontend que esa historia había dejado intencionalmente abierta. El detalle completo (título, criterios de aceptación y backlog técnico) está en su propio archivo, [`HU-10_Administracion_Interfaz.md`](HU-10_Administracion_Interfaz.md), redactado con el mismo formato usado en `Plan_Ruta_CareerPath_Individual.md`. Aquí solo se documenta el proceso de implementación.
+Historia adicional dentro del alcance de HU-08 (el plan de ruta original ya pedía poder "crear, editar y eliminar sin salir de la aplicación", pero HU-08 solo se implementó a nivel de API — ver su sección "Frontend" arriba). Se numera **HU-08b** en vez de HU-10 para no chocar con la HU-10 definida más adelante en el plan de ruta ("Sistema de diseño y tema visual"), que es una historia distinta. Aquí se documenta el proceso completo de esta extensión frontend.
 
 ### Criterios de aceptación y cómo se cumplieron
 
@@ -491,3 +491,63 @@ Se agregó una tercera pestaña "Analítica" a la vista de administración (`adm
 ### Pendiente de verificación manual en navegador
 
 Se confirmó que la pestaña de analítica se sirve correctamente y que replica fielmente la respuesta de la API en cada caso probado, pero la disposición visual de los stat tiles debe confirmarse abriendo `http://127.0.0.1:5500` en un navegador real, con el usuario admin.
+
+---
+
+## HU-10 · Sistema de diseño y tema visual — **Should**
+
+> *Como usuario, quiero una interfaz con estilo visual coherente (colores, tipografía, espaciados) para que la plataforma se sienta profesional y agradable.*
+
+### Criterios de aceptación y cómo se cumplieron
+
+| Criterio | Cómo se implementó |
+|---|---|
+| Paleta de colores, tipografía y componentes base reutilizables (botones, tarjetas, inputs) | `frontend/css/styles.css` se reescribió alrededor de **design tokens** en `:root`: escala de color (primario, peligro, éxito, texto, bordes, superficies, estado deshabilitado), escala tipográfica (`--text-xs` a `--text-2xl`), escala de espaciado de 4px (`--space-1` a `--space-6`), radios de borde y una sombra de tarjeta única. Sobre esos tokens se construyeron los componentes base: `.card` (con modificadores `--sm`, `--lg`, `--center`), `.btn` (con variantes `-primary`, `-secondary`, `-outline`, `-danger-outline`, `-link` y tamaño `-sm`), y estilos globales para `input`/`select`/`textarea`/`label` que aplican a cualquier formulario sin necesidad de clases adicionales. |
+| Todas las pantallas aplican el mismo estilo de forma consistente | Se migraron a estos componentes las seis vistas que ya existían (`register.js`, `login.js`, `test.js`, `results.js`, `careers.js`, `history.js`) reemplazando sus clases de tarjeta específicas (`auth-card`, `test-card`, `results-card`, `careers-catalog-card`) por `.card` + el modificador correspondiente, y sus botones sueltos por `.btn` + variante. |
+| Los elementos interactivos tienen estados visibles: hover, foco, activo y deshabilitado | Selector global `:focus-visible` (cubre `a`, `button`, `input`, `select`, `textarea` y cualquier `[tabindex]`) que aplica el mismo anillo de foco en toda la app sin repetirlo por componente. Cada variante de `.btn` define su propio `:hover` y `:active`; `.btn:disabled` tiene un estado visual compartido (fondo/color atenuado + cursor `not-allowed`). |
+
+### Un bug real encontrado y corregido durante esta historia
+
+Al revisar qué pantallas ya habían sido migradas al nuevo sistema de diseño, `frontend/js/views/admin.js` (la vista de administración de HU-08b) seguía usando clases de la versión anterior del CSS: `careers-catalog-card`, `admin-card` y `admin-cancel-btn`. Ninguna de las tres existe ya en `styles.css` — se habían renombrado o eliminado al construir el nuevo sistema de tarjetas —, así que la pantalla de administración se habría visto completamente sin estilo (tarjeta sin fondo ni sombra, botones de "Crear", "Cancelar", "Editar" y "Eliminar" con la apariencia por defecto del navegador) apenas alguien la abriera en un navegador, mientras el resto de la aplicación ya lucía consistente. No se había detectado antes porque el trabajo de diseño visual se probó pantalla por pantalla y `admin.js` fue la última en revisarse. Se corrigió reemplazando esas clases por `card card--lg` y agregando las clases `.btn` correspondientes a cada botón (`btn-primary` para crear/guardar, `btn-secondary` para cancelar, `btn-outline btn-sm` para editar, `btn-danger-outline btn-sm` para eliminar).
+
+### Decisiones técnicas
+
+- **Tokens como variables CSS (`:root`), no un preprocesador (Sass/Less)**: el stack del proyecto es JS vanilla sin build tool (decisión ya tomada en Fase 0); agregar un preprocesador solo para variables habría introducido un paso de compilación que el resto del frontend no tiene. Las variables CSS nativas ya tienen el soporte de navegador necesario y se pueden usar directamente en los archivos servidos tal cual.
+- **`.btn`/`.card` como clases de utilidad compuestas (base + modificador)** en vez de una clase distinta por combinación (por ejemplo, una única `.btn-primary-sm`): siguiendo el mismo principio ya usado en el proyecto de preferir composición simple sobre una matriz de clases, `class="btn btn-primary btn-sm"` cubre cualquier combinación de variante y tamaño sin que el CSS tenga que anticipar cada mezcla.
+- **`:active` explícito en todas las variantes de `.btn` y en `.career-item--clickable`**: al revisar el criterio de aceptación ("hover, foco, activo y deshabilitado") se notó que solo `.btn-primary` y los botones de navegación tenían un estado `:active` definido; las demás variantes (`-secondary`, `-outline`, `-danger-outline`, `-link`) dependían del estilo por defecto del navegador, que no es visible en botones con estilo plano. Se agregó `:active` a cada una para que el criterio se cumpla de forma pareja en todos los botones, no solo en el primario.
+- **Las tarjetas de carrera del catálogo (`career-item--clickable`) no eran alcanzables por teclado**: el CSS ya traía la regla `[tabindex]:focus-visible` (parte del selector global de foco), pero ningún elemento la usaba porque el `<li>` clicable de `careers.js` no tenía `tabindex`. Sin eso, el criterio "foco" era literalmente imposible de cumplir en ese elemento (no hay estado de foco que mostrar si el elemento nunca puede recibirlo). Se agregó `tabindex="0"` y `role="button"`, junto con un manejador de `keydown` para `Enter`/`Espacio` que dispara la misma acción que el clic — sin este último paso, el elemento habría quedado enfocable pero inerte al teclado, un estado a medias peor que no tocarlo. Esta corrección puntual no reemplaza la revisión de accesibilidad completa que le corresponde a HU-17 (navegación por teclado en general, contraste WCAG AA, textos alternativos); se limitó a lo estrictamente necesario para que el criterio de "foco visible" de esta historia tuviera sentido en este componente.
+- **No se tocó la barra de navegación (`.nav-bar button`) ni las pestañas de administración (`.admin-tab`)** para usar clases `.btn`: ya tenían su propio estilo dedicado, coherente con la paleta y con sus propios estados hover/active, construido antes de esta historia; envolverlos en `.btn` habría significado pelear contra estilos ya correctos sin ganar nada.
+- **Sin librería de componentes ni framework CSS (Bootstrap, Tailwind)**: se evaluó implícitamente al construir esto desde cero en vez de sumar una dependencia; el alcance visual (botones, tarjetas, inputs, un puñado de estados) es pequeño y ya cubierto con ~250 líneas de CSS propio, sin el peso ni la curva de aprendizaje de una librería completa para un proyecto que ya tiene todo su stack definido sin frameworks de frontend.
+
+### Pruebas realizadas
+
+Este es un cambio puramente visual/de marcado (CSS + clases HTML), sin lógica de negocio nueva que aislar en una función pura, así que no aplica el patrón de pruebas automatizadas con `pytest` usado en HU-04/05/08/09. Se verificó de forma estática, sin navegador disponible en este entorno:
+
+1. Búsqueda exhaustiva (`grep`) de las clases de tarjeta antiguas (`careers-catalog-card`, `auth-card`, `test-card`, `results-card`, `admin-card`, `admin-cancel-btn`, `back-link`) en todo `frontend/`, confirmando que no queda ninguna referencia sin migrar tras corregir `admin.js`.
+2. Revisión manual, vista por vista, de que cada `<button>` en el HTML generado por cada archivo de `js/views/` tiene una clase `.btn` (excepto los de la barra de navegación y las pestañas de administración, que tienen su propio estilo dedicado y ya eran consistentes antes de esta historia).
+3. Revisión de que cada variante de `.btn` y `.career-item--clickable` tiene definidos sus cuatro estados (`:hover`, `:focus-visible` vía el selector global, `:active`, `:disabled` donde aplica) directamente en `styles.css`.
+
+### Pendiente de verificación manual en navegador
+
+Todo lo anterior se verificó revisando el CSS y el HTML que genera cada vista, pero la apariencia final (colores realmente aplicados, alineación, y sobre todo que los estados `:hover`/`:focus`/`:active` se vean como se espera al interactuar) debe confirmarse abriendo `http://127.0.0.1:5500` en un navegador real y recorriendo las pantallas: registro, login, test (incluyendo navegar con Tab entre opciones), resultados, catálogo de carreras (incluyendo enfocar una tarjeta con Tab y activarla con Enter), historial y administración (las tres pestañas, con un usuario admin).
+
+---
+
+## Cerrar sesión — complemento de HU-02
+
+No es una historia de usuario del plan de ruta; es el complemento natural de HU-02 (Inicio de sesión), agregado a solicitud explícita del usuario: una vez dentro de la cuenta, hacía falta una forma de terminar la sesión desde la propia interfaz (antes solo se podía "salir" borrando `localStorage` manualmente desde DevTools).
+
+### Cómo se implementó
+
+- **Botón "Cerrar sesión" en la barra de navegación persistente** (`renderNav()`, `frontend/js/app.js`): se agrega junto a "Test vocacional", "Catálogo de carreras", "Mi historial" y (si aplica) "Administración", ya que esa barra solo se renderiza cuando hay una sesión activa (`localStorage.access_token` presente).
+- **Al hacer clic**: se eliminan `access_token` y `user_role` de `localStorage`, se vuelve a llamar `renderNav()` (que ahora renderiza vacío, al no encontrar token) y se muestra `renderLoginView(appContainer)`.
+
+### Decisiones técnicas
+
+- **Solo del lado del cliente, sin endpoint de backend**: la autenticación es JWT stateless (HS256, sin sesiones ni refresh tokens en servidor — decisión ya documentada en HU-02), así que no hay nada que invalidar en la base de datos. El token técnicamente sigue siendo válido hasta su expiración natural (60 minutos) aunque el cliente deje de usarlo; agregar una lista de revocación de tokens solo para esta acción habría sido infraestructura nueva desproporcionada para lo que pide "cerrar sesión" en el alcance de este proyecto. Es la misma compensación entre simplicidad y statelessness ya aceptada en HU-02.
+- **Botón alineado a la derecha de la barra (`margin-left: auto`) y con paleta neutra** (`--color-text-muted`, `--color-border-strong`) en vez de la paleta primaria que usan los demás botones de navegación: es una acción de salida, no una sección más de la app, y separarla visualmente evita que se confunda con un destino de navegación.
+- **Reutiliza `renderNav()` y `renderLoginView()` ya existentes**: no se creó ningún archivo nuevo ni lógica adicional; el flujo de logout es simétrico al de login (mismo contenedor, misma función de navegación).
+
+### Pruebas realizadas
+
+Sin backend involucrado, no aplica ninguna prueba automatizada nueva. Verificación manual pendiente en navegador: iniciar sesión, confirmar que aparece "Cerrar sesión" en la nav, hacer clic y confirmar que vuelve a la pantalla de login, que la barra de navegación desaparece, y que recargar la página después ya no restaura la sesión (por no quedar `access_token` en `localStorage`).

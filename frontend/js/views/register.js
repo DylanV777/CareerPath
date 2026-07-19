@@ -1,6 +1,6 @@
 function renderRegisterView(container) {
   container.innerHTML = `
-    <section class="auth-card">
+    <section class="card card--sm">
       <h1>Crear cuenta</h1>
       <form id="register-form">
         <label for="email">Correo</label>
@@ -9,7 +9,7 @@ function renderRegisterView(container) {
         <label for="password">Contraseña</label>
         <input type="password" id="password" required minlength="8">
 
-        <button type="submit">Registrarme</button>
+        <button type="submit" class="btn btn-primary">Registrarme</button>
       </form>
       <p id="register-message" class="message"></p>
       <p><a href="#" id="go-to-login">¿Ya tienes cuenta? Inicia sesión</a></p>
